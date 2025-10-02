@@ -12,6 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [objectIDs, setObjectIDs] = useState<number[]>([]);
   const [hasMore, setHasMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -19,35 +20,47 @@ export default function Home() {
     setQuery(newQuery);
     setPage(1);
     setLoading(true);
+    setError(null);
 
-    const ids = await searchMetArt(newQuery);
-    setObjectIDs(ids);
+    try {
+      const ids = await searchMetArt(newQuery);
+      setObjectIDs(ids);
 
-    if (ids.length) {
-      const results = await fetchMetObjects(ids, 1, 10);
-      setArtworks(results);
-      setHasMore(ids.length > 10);
-    } else {
-      setArtworks([]);
-      setHasMore(false);
+      if (ids.length) {
+        const results = await fetchMetObjects(ids, 1, 10);
+        setArtworks(results);
+        setHasMore(ids.length > 10);
+      } else {
+        setArtworks([]);
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong while searching. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   async function loadMore(nextPage: number) {
     if (!objectIDs.length) return;
     setLoading(true);
+    setError(null);
 
-    const results = await fetchMetObjects(objectIDs, nextPage, 10);
-    setArtworks((prev) => [...prev, ...results]);
-
-    setHasMore(nextPage * 10 < objectIDs.length);
-    setPage(nextPage);
-    setLoading(false);
+    try {
+      const results = await fetchMetObjects(objectIDs, nextPage, 10);
+      setArtworks((prev) => [...prev, ...results]);
+      setHasMore(nextPage * 10 < objectIDs.length);
+      setPage(nextPage);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load more artworks. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  // Watch loader with IntersectionObserver
+  // Infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -70,17 +83,19 @@ export default function Home() {
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
-      {loading && <p>Loading...</p>}
-      <ArtGrid artworks={artworks} onSelect={setSelected} />
 
+      {error && <p style={{ color: "red" }}>{error}</p>}
       {loading && <p>Loading...</p>}
+
+      <ArtGrid artworks={artworks} onSelect={setSelected} />
 
       {artworks.length > 0 && (
         <>
-          {/* Invisible loader for scroll-based infinite loading */}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {loading && <p>Loading...</p>}
+
           <div ref={loaderRef} style={{ height: "30px" }} />
 
-          {/* Fallback button */}
           {hasMore && !loading && (
             <button
               onClick={() => loadMore(page + 1)}
@@ -92,9 +107,10 @@ export default function Home() {
                 border: "1px solid #333",
                 background: "#f5f5f5",
                 cursor: "pointer",
+                color: "#333",
               }}
             >
-              Load More
+              {error ? "Try Again" : "Load More"}
             </button>
           )}
         </>
