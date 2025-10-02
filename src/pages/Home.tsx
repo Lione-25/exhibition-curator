@@ -70,6 +70,7 @@ export default function Home() {
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
+      {loading && <p>Loading...</p>}
       <ArtGrid artworks={artworks} onSelect={setSelected} />
 
       {loading && <p>Loading...</p>}
