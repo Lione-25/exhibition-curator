@@ -2,49 +2,51 @@ import { useState, useEffect, useRef } from "react";
 import SearchBar from "../components/SearchBar";
 import ArtGrid from "../components/ArtGrid";
 import ViewerModal from "../components/ViewerModal";
-import { fetchMetArt } from "../api/met";
+import { searchMetArt, fetchMetObjects } from "../api/met";
 
 export default function Home() {
   const [artworks, setArtworks] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [objectIDs, setObjectIDs] = useState<number[]>([]);
+  const [hasMore, setHasMore] = useState(false);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  async function loadArtworks(
-    newQuery?: string,
-    reset = false,
-    customPage?: number
-  ) {
-    if (!newQuery && !query) return;
-
+  async function handleSearch(newQuery: string) {
+    setQuery(newQuery);
+    setPage(1);
     setLoading(true);
-    const searchTerm = newQuery ?? query;
-    const currentPage = customPage ?? page;
 
-    const { results, total } = await fetchMetArt(searchTerm, currentPage, 10);
+    const ids = await searchMetArt(newQuery);
+    setObjectIDs(ids);
 
-    if (reset) {
+    if (ids.length) {
+      const results = await fetchMetObjects(ids, 1, 10);
       setArtworks(results);
+      setHasMore(ids.length > 10);
     } else {
-      setArtworks((prev) => [...prev, ...results]);
+      setArtworks([]);
+      setHasMore(false);
     }
 
-    setHasMore(currentPage * 10 < total);
     setLoading(false);
   }
 
-  function handleSearch(newQuery: string) {
-    setQuery(newQuery);
-    setPage(1);
-    loadArtworks(newQuery, true, 1); // <-- force page=1
+  async function loadMore() {
+    if (!objectIDs.length) return;
+    setLoading(true);
+
+    const results = await fetchMetObjects(objectIDs, page, 10);
+    setArtworks((prev) => [...prev, ...results]);
+
+    setHasMore(page * 10 < objectIDs.length);
+    setLoading(false);
   }
 
   // Watch loader with IntersectionObserver
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -53,20 +55,20 @@ export default function Home() {
           setPage((prev) => prev + 1);
         }
       },
-      { threshold: 1.0 } // triggers when loader is fully visible
+      { threshold: 1.0 }
     );
 
     const el = loaderRef.current;
     if (el) observer.observe(el);
 
     return () => {
-      if (el) observer.unobserve(el); // <-- always cleans up the same element
+      if (el) observer.unobserve(el);
     };
   }, [hasMore, loading]);
 
   // Fetch when page changes
   useEffect(() => {
-    if (page > 1) loadArtworks();
+    if (page > 1) loadMore();
   }, [page]);
 
   return (
@@ -74,7 +76,9 @@ export default function Home() {
       <SearchBar onSearch={handleSearch} />
       <ArtGrid artworks={artworks} onSelect={setSelected} />
       {loading && <p>Loading...</p>}
-      <div ref={loaderRef} style={{ height: "30px" }} />
+      {artworks.length > 0 && (
+        <div ref={loaderRef} style={{ height: "30px" }} />
+      )}
       <ViewerModal art={selected} onClose={() => setSelected(null)} />
     </div>
   );
