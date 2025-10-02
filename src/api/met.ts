@@ -1,14 +1,13 @@
 import axios from "axios";
 
-// Fetch from The Met Museum API
-export async function fetchMetArt(query: string) {
+export async function fetchMetArt(query: string, page = 1, pageSize = 10) {
   const searchUrl = `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${query}`;
   const { data } = await axios.get(searchUrl);
 
-  if (!data.objectIDs) return [];
+  if (!data.objectIDs) return { results: [], total: 0 };
 
-  // Just grab first 10 results
-  const ids = data.objectIDs.slice(0, 10);
+  const start = (page - 1) * pageSize;
+  const ids = data.objectIDs.slice(start, start + pageSize);
 
   const results = await Promise.all(
     ids.map(async (id: number) => {
@@ -25,5 +24,5 @@ export async function fetchMetArt(query: string) {
     })
   );
 
-  return results;
+  return { results, total: data.total };
 }
