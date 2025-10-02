@@ -8,9 +8,13 @@ interface ArtCardProps {
 export default function ArtCard({ art, onClick }: ArtCardProps) {
   return (
     <div className={styles.card} onClick={onClick}>
-      <img src={art.image} alt={art.title} />
+      {art.image ? (
+        <img src={art.image} alt={art.title} />
+      ) : (
+        <div className={styles.noImage}>No Image</div>
+      )}
       <h3>{art.title}</h3>
-      <p>{art.artist}</p>
+      <p>{art.artist || "Unknown Artist"}</p>
       <small>{art.source}</small>
     </div>
   );

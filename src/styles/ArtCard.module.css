@@ -1,10 +1,52 @@
 .card {
   border: 1px solid #ccc;
-  padding: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  width: 200px;
+  height: 280px; /* fixed card height */
 }
 
 .card:hover {
   transform: scale(1.05);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover; /* ensures image fills the area without stretching */
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.2rem;
+  color: #333;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+.card small {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.noImage {
+  width: 100%;
+  height: 180px;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
 }

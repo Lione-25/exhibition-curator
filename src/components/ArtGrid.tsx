@@ -1,4 +1,5 @@
 import ArtCard from "./ArtCard";
+import styles from "../styles/ArtGrid.module.css";
 
 interface ArtGridProps {
   artworks: any[];
@@ -7,13 +8,7 @@ interface ArtGridProps {
 
 export default function ArtGrid({ artworks, onSelect }: ArtGridProps) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "1rem",
-      }}
-    >
+    <div className={styles.grid}>
       {artworks.map((art) => (
         <ArtCard key={art.id} art={art} onClick={() => onSelect(art)} />
       ))}
