@@ -19,9 +19,9 @@ export default function ViewerModal({ art, onClose }: ViewerModalProps) {
         ) : (
           <div className={styles.noImage}>No Image</div>
         )}
-        <h2 style={{ margin: "10px 0" }}>{art.title}</h2>
-        <p>{art.artist || "Unknown Artist"}</p>
-        <small>{art.source}</small>
+        <h2 style={{ margin: "10px 0", color: "#333" }}>{art.title}</h2>
+        <p style={{ color: "#333" }}>{art.artist || "Unknown Artist"}</p>
+        <small style={{ color: "#333" }}>{art.source}</small>
       </div>
     </div>
   );
