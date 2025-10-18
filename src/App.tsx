@@ -1,14 +1,13 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Exhibition from "./pages/Exhibition";
+import Header from "./components/Header";
 import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <nav>
-        <Link to="/">Home</Link> | <Link to="/exhibition">Exhibition</Link>
-      </nav>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/exhibition" element={<Exhibition />} />
