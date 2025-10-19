@@ -35,7 +35,7 @@ The **Exhibition Curator Project** is a web application that allows users to cre
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/exhibition-curator.git
+git clone https://github.com/Lione-25/exhibition-curator
 cd exhibition-curator
 ```
 
@@ -54,7 +54,7 @@ npm run dev
 4. Open your browser and navigate to:
 
 ```arduino
-http://localhost:3000
+http://localhost:5173
 ```
 
 ## Usage
