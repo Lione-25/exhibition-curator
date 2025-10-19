@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **The Virtual Gallery** is a web application that allows users to create personalised virtual exhibitions using artworks from multiple collections. Users can search, filter, and select artworks, then view them in a curated exhibition with detailed information, images, and links to see the artworks in person. This project is designed for researchers, students, and art enthusiasts who want an interactive and user-driven art experience.
+**The Virtual Gallery** is a web application that allows users to create personalised virtual exhibitions using artworks from multiple collections. Users can search, filter, and select artworks, then view them in a curated exhibition with detailed information, images, and links to see the artworks in person. This project is designed for researchers, students, and art enthusiasts who want an interactive and user-driven art experience.
 
 ---
 
