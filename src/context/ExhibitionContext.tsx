@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface ArtItem {
@@ -23,7 +23,16 @@ const ExhibitionContext = createContext<ExhibitionContextType | undefined>(
 );
 
 export const ExhibitionProvider = ({ children }: { children: ReactNode }) => {
-  const [exhibition, setExhibition] = useState<ArtItem[]>([]);
+  const [exhibition, setExhibition] = useState<ArtItem[]>(() => {
+    // Load from session storage on init
+    const saved = sessionStorage.getItem("exhibition");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save to session storage whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem("exhibition", JSON.stringify(exhibition));
+  }, [exhibition]);
 
   const addArt = (art: ArtItem) => {
     setExhibition((prev) => {
