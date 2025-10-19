@@ -49,3 +49,26 @@
   height: 200px;
   background: #eee;
 }
+
+.addButton {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.addButton:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.addButton:disabled:hover {
+  background-color: #aaa; /* stays the same even on hover */
+}
