@@ -3,31 +3,56 @@ import SearchBar from "../components/SearchBar";
 import ArtGrid from "../components/ArtGrid";
 import ViewerModal from "../components/ViewerModal";
 import { searchMetArt, fetchMetObjects } from "../api/met";
+import {
+  searchScienceMuseum,
+  fetchScienceMuseumObjects,
+} from "../api/theScienceMuseum";
 
 export default function Home() {
   const [artworks, setArtworks] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
   const [query, setQuery] = useState("");
+  const [museum, setMuseum] = useState<"met" | "science">("met");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [objectIDs, setObjectIDs] = useState<number[]>([]);
+  const [objectIDs, setObjectIDs] = useState<
+    number[] | { id: string; type: string; link: string }[]
+  >([]);
+  // For Met: number[]
+  // For Science Museum: { id: string; type: string; link: string }[]
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  async function handleSearch(newQuery: string) {
+  async function handleSearch(
+    newQuery: string,
+    selectedMuseum: "met" | "science"
+  ) {
     setQuery(newQuery);
+    setMuseum(selectedMuseum);
     setPage(1);
     setLoading(true);
     setError(null);
 
     try {
-      const ids = await searchMetArt(newQuery);
+      let ids;
+      if (selectedMuseum === "met") {
+        ids = await searchMetArt(newQuery); // number[]
+      } else {
+        ids = await searchScienceMuseum(newQuery); // object[]
+      }
+
       setObjectIDs(ids);
 
       if (ids.length) {
-        const results = await fetchMetObjects(ids, 1, 10);
+        const results =
+          selectedMuseum === "met"
+            ? await fetchMetObjects(ids as number[], 1, 10)
+            : await fetchScienceMuseumObjects(
+                ids.slice(0, 10) as { id: string; type: string }[]
+              );
+
         setArtworks(results);
         setHasMore(ids.length > 10);
       } else {
@@ -48,7 +73,17 @@ export default function Home() {
     setError(null);
 
     try {
-      const results = await fetchMetObjects(objectIDs, nextPage, 10);
+      //   const results = await fetchMetObjects(objectIDs, nextPage, 10);
+      const results =
+        museum === "met"
+          ? await fetchMetObjects(objectIDs as number[], nextPage, 10)
+          : await fetchScienceMuseumObjects(
+              (objectIDs as { id: string; type: string }[]).slice(
+                (nextPage - 1) * 10,
+                nextPage * 10
+              )
+            );
+
       setArtworks((prev) => [...prev, ...results]);
       setHasMore(nextPage * 10 < objectIDs.length);
       setPage(nextPage);
@@ -82,7 +117,11 @@ export default function Home() {
 
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar
+        onSearch={handleSearch}
+        museum={museum}
+        setMuseum={setMuseum}
+      />
 
       {error && <p style={{ color: "red" }}>{error}</p>}
       {loading && <p>Loading...</p>}

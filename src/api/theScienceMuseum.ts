@@ -15,7 +15,9 @@ export async function searchScienceMuseum(
     query
   )}&page[number]=${page}&page[size]=${pageSize}`;
 
-  const { data } = await axios.get(url);
+  const { data } = await axios.get(url, {
+    headers: { Accept: "application/json" },
+  });
 
   if (!data?.data) return [];
 
@@ -30,32 +32,67 @@ export async function searchScienceMuseum(
  * Step 2: Given a list of items (with type + id), fetch their details
  * Returns simplified objects with basic info (title/name, type, image, etc.)
  */
-export async function fetchScienceMuseumItems(
+export async function fetchScienceMuseumObjects(
   items: { id: string; type: string }[]
 ) {
   const results = await Promise.all(
     items.map(async (item) => {
       try {
-        const res = await axios.get(`${BASE_URL}/${item.type}/${item.id}`);
+        const res = await axios.get(`${BASE_URL}/${item.type}/${item.id}`, {
+          headers: { Accept: "application/json" },
+        });
         const data = res.data;
 
         const attributes = data?.data?.attributes ?? {};
-        const title =
-          attributes.title ||
-          attributes.name ||
-          attributes.summary_title ||
-          "Untitled";
+
+        console.log("attributes=", attributes);
+
+        const title = Array.isArray(attributes.title)
+          ? attributes.title[0]?.value || "Untitled"
+          : "Untitled";
 
         const image =
-          attributes.multimedia?.[0]?.processed?.medium?.location ||
+          attributes.multimedia?.[0]?.["@processed"]?.medium?.location ||
           attributes?.default_image ||
           null;
+
+        const largeImage =
+          attributes.multimedia?.[0]?.["@processed"]?.large?.location ||
+          attributes?.default_image ||
+          null;
+
+        let artist =
+          attributes.ceation?.maker?.[0]?.summary?.title ||
+          attributes.creation?.maker?.[0]?.name?.[0]?.value ||
+          "Unknown Maker";
+        if (artist === "Unknown maker") {
+          artist = "Unknown Maker";
+        }
+
+        interface DescriptionItem {
+          type: string;
+          value: string;
+          primary?: boolean;
+        }
+
+        let description = "No description available";
+
+        if (Array.isArray(attributes.description)) {
+          const descs = attributes.description as DescriptionItem[];
+          description =
+            descs.find((d) => d.type === "web description")?.value ||
+            descs.find((d) => d.primary)?.value ||
+            description;
+        }
 
         return {
           id: item.id,
           type: item.type,
           title,
           image,
+          largeImage,
+          artist,
+          description,
           link: `${BASE_URL}/${item.type}/${item.id}`,
           source: "Science Museum Group",
         };
@@ -65,6 +102,6 @@ export async function fetchScienceMuseumItems(
       }
     })
   );
-
+  console.log(results);
   return results.filter(Boolean);
 }

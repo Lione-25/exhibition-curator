@@ -2,15 +2,22 @@ import { useState } from "react";
 import MuseumSelector from "./MuseumSelector";
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string, museum: "met" | "science") => void;
+  museum: "met" | "science";
+  setMuseum: (museum: "met" | "science") => void;
 }
 
-export default function SearchBar({ onSearch }: SearchBarProps) {
+export default function SearchBar({
+  onSearch,
+  museum,
+  setMuseum,
+}: SearchBarProps) {
   const [query, setQuery] = useState("");
+  // const [museum, setMuseum] = useState<"met" | "science">("met");
 
   function handleSearch() {
     if (query.trim() === "") return; // ignore empty searches
-    onSearch(query.trim());
+    onSearch(query.trim(), museum);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -22,7 +29,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   return (
     <div style={{ textAlign: "right" }}>
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
-        <MuseumSelector />
+        <MuseumSelector museum={museum} setMuseum={setMuseum} />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}

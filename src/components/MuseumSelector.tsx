@@ -1,8 +1,12 @@
 import { useState } from "react";
 import styles from "../styles/MuseumSelector.module.css";
 
-function MuseumSelector() {
-  const [museum, setMuseum] = useState<"met" | "science">("met");
+interface MuseumSelectorProps {
+  museum: "met" | "science";
+  setMuseum: (museum: "met" | "science") => void;
+}
+
+function MuseumSelector({ museum, setMuseum }: MuseumSelectorProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
     <div className={styles.museumSelector}>

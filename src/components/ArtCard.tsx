@@ -13,7 +13,8 @@ export default function ArtCard({ art, onClick }: ArtCardProps) {
       ) : (
         <div className={styles.noImage}>No Image</div>
       )}
-      <h3>{art.title}</h3>
+      <h3>{typeof art.title === "string" ? art.title : "Untitled"}</h3>
+
       <p>{art.artist || "Unknown Artist"}</p>
       <small>{art.source}</small>
     </div>
