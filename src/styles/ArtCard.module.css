@@ -49,9 +49,12 @@
 
 .card p,
 .card small {
-  white-space: nowrap; /* force single line */
-  overflow: hidden; /* hide overflow text */
-  text-overflow: ellipsis; /* add ellipsis (…) */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .noImage {
