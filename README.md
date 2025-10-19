@@ -35,8 +35,8 @@
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Lione-25/exhibition-curator
-cd exhibition-curator
+git clone https://github.com/Lione-25/the-virtual-gallery
+cd the-virtual-gallery
 ```
 
 2. Install dependencies:
