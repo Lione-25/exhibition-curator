@@ -131,6 +131,8 @@ export default function Home() {
   useEffect(() => {
     if (query) {
       handleSearch(query, museum, selectedCategory);
+      // } else if (selectedCategory) {
+      //   handleSearch("*", museum, selectedCategory);
     }
   }, [selectedCategory]);
 
@@ -151,6 +153,10 @@ export default function Home() {
       {loading && <p>Loading...</p>}
 
       <ArtGrid artworks={artworks} onSelect={setSelected} />
+
+      {artworks.length === 0 && query && !error && !loading && (
+        <p>No items found</p>
+      )}
 
       {artworks.length > 0 && (
         <>
