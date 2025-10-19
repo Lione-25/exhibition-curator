@@ -14,7 +14,9 @@ export default function Home() {
   const [selected, setSelected] = useState<any | null>(null);
   const [query, setQuery] = useState("");
   const [museum, setMuseum] = useState<"met" | "science">("met");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<
+    string | number | null
+  >(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [objectIDs, setObjectIDs] = useState<
@@ -30,7 +32,7 @@ export default function Home() {
   async function handleSearch(
     newQuery: string,
     selectedMuseum: "met" | "science",
-    category?: string | null
+    category?: string | number | null
   ) {
     setQuery(newQuery);
     setMuseum(selectedMuseum);
@@ -41,9 +43,17 @@ export default function Home() {
     try {
       let ids;
       if (selectedMuseum === "met") {
-        ids = await searchMetArt(newQuery); // number[]
+        ids = await searchMetArt(
+          newQuery,
+          category ? String(category) : undefined
+        );
       } else {
-        ids = await searchScienceMuseum(newQuery, 0, 50, category || undefined); // object[]
+        ids = await searchScienceMuseum(
+          newQuery,
+          0,
+          50,
+          category ? String(category) : undefined
+        );
       }
 
       setObjectIDs(ids);
@@ -119,10 +129,14 @@ export default function Home() {
   }, [hasMore, loading, page, objectIDs]);
 
   useEffect(() => {
-    if (museum === "science" && query) {
+    if (query) {
       handleSearch(query, museum, selectedCategory);
     }
   }, [selectedCategory]);
+
+  useEffect(() => {
+    setSelectedCategory(null);
+  }, [museum]);
 
   return (
     <div>
@@ -131,7 +145,7 @@ export default function Home() {
         museum={museum}
         setMuseum={setMuseum}
       />
-      <FilterPanel onApply={setSelectedCategory} />
+      <FilterPanel museum={museum} onApply={setSelectedCategory} />
 
       {error && <p style={{ color: "red" }}>{error}</p>}
       {loading && <p>Loading...</p>}

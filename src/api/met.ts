@@ -1,8 +1,16 @@
 import axios from "axios";
 
 // Step 1: Search once, get all IDs
-export async function searchMetArt(query: string): Promise<number[]> {
-  const searchUrl = `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${query}`;
+export async function searchMetArt(
+  query: string,
+  category?: string
+): Promise<number[]> {
+  let searchUrl = `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${encodeURIComponent(
+    query
+  )}`;
+  if (category) {
+    searchUrl += `&departmentId=${category}`;
+  }
   const { data } = await axios.get(searchUrl);
   return data.objectIDs ?? [];
 }
@@ -50,4 +58,15 @@ export async function fetchMetObjects(
   );
 
   return results;
+}
+
+export async function fetchMetDepartments() {
+  const url =
+    "https://collectionapi.metmuseum.org/public/collection/v1/departments";
+  const { data } = await axios.get(url);
+
+  return data.departments.map((d: any) => ({
+    id: d.departmentId,
+    name: d.displayName,
+  }));
 }
