@@ -57,6 +57,8 @@ npm run dev
 http://localhost:5173
 ```
 
+---
+
 ## Usage
 
 1. Enter a keyword in the search bar or select a category to filter artworks.
@@ -66,6 +68,8 @@ http://localhost:5173
 3. Click on an artwork thumbnail to view detailed information and images.
 
 4. Curated exhibitions persist for the duration of your session.
+
+---
 
 ## API Integration
 
@@ -84,6 +88,8 @@ http://localhost:5173
 - Endpoint used:
   - Search: /search/objects?q={query}&page[number]={page}&page[size]={size}&category={category}
 
+---
+
 ## Project Structure
 
 ```bash
@@ -97,6 +103,8 @@ http://localhost:5173
   main.tsx     - Entry point
 ```
 
+---
+
 ## Non-Functional Requirements
 
 - Responsive design for desktop and mobile devices.
@@ -109,6 +117,8 @@ http://localhost:5173
 
 - Fully hosted on a free distribution platform with live URL provided.
 
+---
+
 ## Hosting
 
 This project is hosted on Vercel/Netlify and can be accessed at:
@@ -116,6 +126,8 @@ This project is hosted on Vercel/Netlify and can be accessed at:
 ```arduine
 https://your-project-url.vercel.app
 ```
+
+---
 
 ## License
 
