@@ -10,7 +10,7 @@
 
 ### Minimum Viable Product (MVP)
 
-- **Search and Filter**: Users can search for artworks by keywords or select preset categories.
+- **Search and Filter**: Users can search for artworks by keywords and select preset categories.
 - **Personalised Exhibition**: Selected artworks are added to a temporary collection for the session.
 - **Artwork Details**: Clicking on a thumbnail shows high-quality images and key information about the artwork.
 - **Session-based Persistence**: Curated exhibitions persist throughout the user’s session.
