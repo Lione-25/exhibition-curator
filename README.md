@@ -1,8 +1,8 @@
-# Exhibition Curator Project
+# Art Explorer
 
 ## Overview
 
-The **Exhibition Curator Project** is a web application that allows users to create personalised virtual exhibitions using artworks from multiple museum and university collections. Users can search, filter, and select artworks, then view them in a curated exhibition with detailed information, images, and links to see the artworks in person. This project is designed for researchers, students, and art enthusiasts who want an interactive and user-driven art experience.
+The **Art Explorer** is a web application that allows users to create personalised virtual exhibitions using artworks from multiple collections. Users can search, filter, and select artworks, then view them in a curated exhibition with detailed information, images, and links to see the artworks in person. This project is designed for researchers, students, and art enthusiasts who want an interactive and user-driven art experience.
 
 ---
 
@@ -107,15 +107,11 @@ http://localhost:5173
 
 ## Non-Functional Requirements
 
-- Responsive design for desktop and mobile devices.
-
-- Accessibility considerations (ARIA attributes, keyboard navigation).
+- Responsive design
 
 - Clear communication of errors and loading states.
 
 - Fast loading of high-resolution images with loading indicators.
-
-- Fully hosted on a free distribution platform with live URL provided.
 
 ---
 
