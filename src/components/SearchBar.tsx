@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MuseumSelector from "./MuseumSelector";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -19,32 +20,36 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }
 
   return (
-    <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Search artworks..."
-        style={{
-          padding: "8px",
-          flexGrow: 1,
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-        }}
-      />
-      <button
-        onClick={handleSearch}
-        style={{
-          padding: "8px 16px",
-          border: "none",
-          borderRadius: "4px",
-          background: "#333",
-          color: "#fff",
-          cursor: "pointer",
-        }}
-      >
-        Search
-      </button>
+    <div style={{ textAlign: "right" }}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
+        <MuseumSelector />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Search artworks..."
+          style={{
+            padding: "8px",
+            flexGrow: 1,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+
+        <button
+          onClick={handleSearch}
+          style={{
+            padding: "8px 16px",
+            border: "1px solid #333",
+            borderRadius: "4px",
+            background: "#333",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          Search
+        </button>
+      </div>
     </div>
   );
 }
