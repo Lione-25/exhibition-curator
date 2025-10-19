@@ -22,6 +22,11 @@
   position: relative;
 }
 
+.modal p,
+h2 {
+  color: #333;
+}
+
 .closeButton {
   position: absolute;
   top: 25px;

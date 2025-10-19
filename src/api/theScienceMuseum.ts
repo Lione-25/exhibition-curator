@@ -85,6 +85,21 @@ export async function fetchScienceMuseumObjects(
             description;
         }
 
+        interface OnDisplayItem {
+          primary?: boolean;
+          value: string;
+          type?: string;
+        }
+
+        let location = "Location Unknown";
+
+        if (Array.isArray(attributes.ondisplay)) {
+          location =
+            (attributes.ondisplay as OnDisplayItem[]).find(
+              (d: OnDisplayItem) => d.primary
+            )?.value || location;
+        }
+
         return {
           id: item.id,
           type: item.type,
@@ -93,6 +108,7 @@ export async function fetchScienceMuseumObjects(
           largeImage,
           artist,
           description,
+          location: `📍 ${location}`,
           link: `${BASE_URL}/${item.type}/${item.id}`,
           source: "Science Museum Group",
         };

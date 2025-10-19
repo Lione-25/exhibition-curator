@@ -38,7 +38,7 @@ export default function ViewerModal({
         <h2 style={{ margin: "10px 0", color: "#333" }}>{art.title}</h2>
         <p style={{ color: "#333" }}>{art.description}</p>
         <p style={{ color: "#333" }}>{art.artist || "Unknown Artist"}</p>
-
+        <p> {art.location}</p>
         {inExhibition ? (
           <button
             className={styles.addButton}

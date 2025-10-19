@@ -39,6 +39,11 @@ export async function fetchMetObjects(
         largeImage: data.primaryImage || null,
         link: data.objectURL, // link to view on the Met website
         description,
+        location: data.repository
+          ? `📍 ${data.repository}${
+              data.GalleryNumber ? `, Gallery ${data.GalleryNumber}` : ""
+            }`
+          : "Location Unknown",
         source: "The Metropolitan Museum of Art Collection",
       };
     })
