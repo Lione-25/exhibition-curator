@@ -21,12 +21,25 @@ export async function fetchMetObjects(
       const res = await axios.get(
         `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
       );
+      const data = res.data;
+      console.log(data);
+      // Build a description from available fields
+      const description =
+        data.description ||
+        [data.objectName, data.culture, data.period, data.medium]
+          .filter(Boolean)
+          .join(", ") ||
+        "No description available";
+
       return {
         id,
-        title: res.data.title,
-        artist: res.data.artistDisplayName,
-        image: res.data.primaryImageSmall,
-        source: "The Met",
+        title: data.title || "Untitled",
+        artist: data.artistDisplayName || "Unknown Artist",
+        image: data.primaryImageSmall || data.primaryImage || null,
+        largeImage: data.primaryImage || null,
+        link: data.objectURL, // link to view on the Met website
+        description,
+        source: "The Metropolitan Museum of Art Collection",
       };
     })
   );
