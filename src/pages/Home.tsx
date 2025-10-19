@@ -8,24 +8,48 @@ import {
   searchScienceMuseum,
   fetchScienceMuseumObjects,
 } from "../api/theScienceMuseum";
+import { useSearch } from "../context/SearchContext";
 
 export default function Home() {
-  const [artworks, setArtworks] = useState<any[]>([]);
+  //   const [artworks, setArtworks] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
-  const [query, setQuery] = useState("");
-  const [museum, setMuseum] = useState<"met" | "science">("met");
-  const [selectedCategory, setSelectedCategory] = useState<
-    string | number | null
-  >(null);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [objectIDs, setObjectIDs] = useState<
-    number[] | { id: string; type: string; link: string }[]
-  >([]);
-  // For Met: number[]
-  // For Science Museum: { id: string; type: string; link: string }[]
-  const [hasMore, setHasMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  //   const [query, setQuery] = useState("");
+  //   const [museum, setMuseum] = useState<"met" | "science">("met");
+  //   const [selectedCategory, setSelectedCategory] = useState<
+  //     string | number | null
+  //   >(null);
+  //   const [page, setPage] = useState(1);
+  //   const [loading, setLoading] = useState(false);
+  //   const [objectIDs, setObjectIDs] = useState<
+  //     number[] | { id: string; type: string; link: string }[]
+  //   >([]);
+  //   // For Met: number[]
+  //   // For Science Museum: { id: string; type: string; link: string }[]
+  //   const [hasMore, setHasMore] = useState(false);
+  //   const [error, setError] = useState<string | null>(null);
+
+  const {
+    query,
+    setQuery,
+    museum,
+    setMuseum,
+    selectedCategory,
+    setSelectedCategory,
+    artworks,
+    setArtworks,
+    objectIDs,
+    setObjectIDs,
+    page,
+    setPage,
+    hasMore,
+    setHasMore,
+    loading,
+    setLoading,
+    error,
+    setError,
+    scrollY,
+    setScrollY,
+  } = useSearch();
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -139,6 +163,19 @@ export default function Home() {
   useEffect(() => {
     setSelectedCategory(null);
   }, [museum]);
+
+  useEffect(() => {
+    // Restore scroll
+    window.scrollTo(0, scrollY);
+
+    // Save scroll before navigating away
+    const handleBeforeUnload = () => setScrollY(window.scrollY);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      setScrollY(window.scrollY);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <div>
