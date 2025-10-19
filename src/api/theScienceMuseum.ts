@@ -9,11 +9,21 @@ const BASE_URL = "https://collection.sciencemuseumgroup.org.uk";
 export async function searchScienceMuseum(
   query: string,
   page = 0,
-  pageSize = 50
+  pageSize = 50,
+  category?: string
 ): Promise<{ id: string; type: string; link: string }[]> {
-  const url = `${BASE_URL}/search?q=${encodeURIComponent(
+  const formattedCategory = category
+    ? category.toLowerCase().replace(/\s+/g, "-")
+    : "";
+
+  const basePath = `${BASE_URL}/search/objects`;
+  const categoryPath = formattedCategory
+    ? `/categories/${formattedCategory}`
+    : "";
+  const queryParams = `?q=${encodeURIComponent(
     query
   )}&page[number]=${page}&page[size]=${pageSize}`;
+  const url = `${basePath}${categoryPath}${queryParams}`;
 
   const { data } = await axios.get(url, {
     headers: { Accept: "application/json" },

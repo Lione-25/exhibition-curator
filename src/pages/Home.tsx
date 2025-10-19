@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import SearchBar from "../components/SearchBar";
+import FilterPanel from "../components/FilterPanel";
 import ArtGrid from "../components/ArtGrid";
 import ViewerModal from "../components/ViewerModal";
 import { searchMetArt, fetchMetObjects } from "../api/met";
@@ -13,6 +14,7 @@ export default function Home() {
   const [selected, setSelected] = useState<any | null>(null);
   const [query, setQuery] = useState("");
   const [museum, setMuseum] = useState<"met" | "science">("met");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [objectIDs, setObjectIDs] = useState<
@@ -27,7 +29,8 @@ export default function Home() {
 
   async function handleSearch(
     newQuery: string,
-    selectedMuseum: "met" | "science"
+    selectedMuseum: "met" | "science",
+    category?: string | null
   ) {
     setQuery(newQuery);
     setMuseum(selectedMuseum);
@@ -40,7 +43,7 @@ export default function Home() {
       if (selectedMuseum === "met") {
         ids = await searchMetArt(newQuery); // number[]
       } else {
-        ids = await searchScienceMuseum(newQuery); // object[]
+        ids = await searchScienceMuseum(newQuery, 0, 50, category || undefined); // object[]
       }
 
       setObjectIDs(ids);
@@ -115,13 +118,20 @@ export default function Home() {
     };
   }, [hasMore, loading, page, objectIDs]);
 
+  useEffect(() => {
+    if (museum === "science" && query) {
+      handleSearch(query, museum, selectedCategory);
+    }
+  }, [selectedCategory]);
+
   return (
     <div>
       <SearchBar
-        onSearch={handleSearch}
+        onSearch={(q, m) => handleSearch(q, m, selectedCategory)}
         museum={museum}
         setMuseum={setMuseum}
       />
+      <FilterPanel onApply={setSelectedCategory} />
 
       {error && <p style={{ color: "red" }}>{error}</p>}
       {loading && <p>Loading...</p>}
