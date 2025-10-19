@@ -1,8 +1,8 @@
-.museum-selector {
-  /* position: relative; */
+.museumSelector {
+  position: relative;
 }
 
-.museum-button {
+.museumButton {
   background: #f5f5f5;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -13,11 +13,11 @@
   transition: background 0.2s;
 }
 
-.museum-button:hover {
+.museumButton:hover {
   background: #e8e8e8;
 }
 
-.museum-dropdown {
+.museumDropdown {
   position: absolute;
   right: 0;
   top: 110%;
@@ -33,12 +33,12 @@
   color: #333;
 }
 
-.museum-dropdown li {
+.museumDropdown li {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.museum-dropdown li:hover {
+.museumDropdown li:hover {
   background: #f2f2f2;
 }
